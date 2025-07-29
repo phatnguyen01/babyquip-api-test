@@ -46,7 +46,7 @@ app.post("/api/deeplink/url-parser", (req, res) => {
         },
       });
     } else if (url === "https://staging.babyquip.com/p/777/carseats") {
-      const getUrlNameParams = "car-seats";
+      const getUrlNameParams = "carseats";
       res.status(200).json({
         success: true,
         screen_name: "hd.QPShoppingScreen",
@@ -68,7 +68,6 @@ app.post("/api/deeplink/url-parser", (req, res) => {
             id: 777,
           },
           modal: "DETAIL_ITEM",
-          modalId: 54014,
           getUrlParms: getUrlNameParams,
         },
       });
