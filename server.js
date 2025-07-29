@@ -22,71 +22,76 @@ app.get("/", (req, res) => {
 // POST API endpoint
 app.post("/api/deeplink/url-parser", (req, res) => {
   try {
-    // Get data from request body
     const { url } = req.body;
-    if (url === "https://staging.babyquip.com/") {
-      res.status(200).json({
+
+    if (!url) {
+      return res.status(400).json({ success: false, error: "Missing URL" });
+    }
+
+    const parsedUrl = new URL(url);
+    const pathSegments = parsedUrl.pathname.split("/").filter(Boolean); // remove empty segments
+    const [userId, subPath] = pathSegments;
+
+    // CASE 1: Home page
+    if (pathSegments.length === 0) {
+      return res.status(200).json({
         success: true,
         screen_name: "hd.HomeExplore",
         params: {
-          user: {
-            id: 777,
-          },
-        },
-      });
-    } else if (url === "https://staging.babyquip.com/p/777") {
-      res.status(200).json({
-        success: true,
-        screen_name: "hd.QPShoppingScreen",
-        params: {
-          user: {
-            id: 777,
-          },
-          isFromAffiliate: true,
-        },
-      });
-    } else if (url === "https://staging.babyquip.com/p/777/carseats") {
-      const getUrlNameParams = "carseats";
-      res.status(200).json({
-        success: true,
-        screen_name: "hd.QPShoppingScreen",
-        params: {
-          user: {
-            id: 777,
-          },
-          modal: "CATEGORY_ITEM",
-          getUrlParms: getUrlNameParams,
-        },
-      });
-    } else {
-      const getUrlNameParams = "baby-jogger-city-mini-2-double-stroller";
-      res.status(200).json({
-        success: true,
-        screen_name: "hd.QPShoppingScreen",
-        params: {
-          user: {
-            id: 777,
-          },
-          modal: "DETAIL_ITEM",
-          getUrlParms: getUrlNameParams,
+          user: { id: 777 },
         },
       });
     }
 
-    // Send success response
-    // res.status(201).json({
-    //   success: true,
-    //   message: "Data received successfully",
-    //   data: {
-    //     id: Date.now(), // Simple ID generation
-    //     name,
-    //     email,
-    //     message: message || "No message provided",
-    //     receivedAt: new Date().toISOString(),
-    //   },
-    // });
+    // CASE 2: User profile only (e.g., /p/777)
+    if (
+      pathSegments.length === 2 &&
+      pathSegments[0] === "p" &&
+      !subPath?.includes("/")
+    ) {
+      return res.status(200).json({
+        success: true,
+        screen_name: "hd.QPShoppingScreen",
+        params: {
+          user: { id: parseInt(pathSegments[1]) },
+          isFromAffiliate: true,
+        },
+      });
+    }
+
+    // CASE 3: Category page (e.g., /p/777/carseats)
+    if (pathSegments.length === 3 && pathSegments[0] === "p") {
+      return res.status(200).json({
+        success: true,
+        screen_name: "hd.QPShoppingScreen",
+        params: {
+          user: { id: parseInt(pathSegments[1]) },
+          modal: "CATEGORY_ITEM",
+          getUrlParms: pathSegments[2],
+        },
+      });
+    }
+
+    // CASE 4: Product detail (default/fallback)
+    if (pathSegments.length >= 4 && pathSegments[0] === "p") {
+      return res.status(200).json({
+        success: true,
+        screen_name: "hd.QPShoppingScreen",
+        params: {
+          user: { id: parseInt(pathSegments[1]) },
+          modal: "DETAIL_ITEM",
+          getUrlParms: pathSegments.slice(3).join("/"), // allow nested slugs
+        },
+      });
+    }
+
+    // Unknown path
+    return res.status(400).json({
+      success: false,
+      error: "Unsupported deeplink URL format",
+    });
   } catch (error) {
-    console.error("Error processing POST request:", error);
+    console.error("Error parsing deeplink:", error);
     res.status(500).json({
       success: false,
       error: "Internal server error",
