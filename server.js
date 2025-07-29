@@ -46,6 +46,7 @@ app.post("/api/deeplink/url-parser", (req, res) => {
         },
       });
     } else if (url === "https://staging.babyquip.com/p/777/carseats") {
+      const getUrlNameParams = "car-seats";
       res.status(200).json({
         success: true,
         screen_name: "hd.QPShoppingScreen",
@@ -54,10 +55,11 @@ app.post("/api/deeplink/url-parser", (req, res) => {
             id: 777,
           },
           modal: "CATEGORY_ITEM",
-          modalId: 21,
+          getUrlParms: getUrlNameParams,
         },
       });
     } else {
+      const getUrlNameParams = "baby-jogger-city-mini-2-double-stroller";
       res.status(200).json({
         success: true,
         screen_name: "hd.QPShoppingScreen",
@@ -67,6 +69,7 @@ app.post("/api/deeplink/url-parser", (req, res) => {
           },
           modal: "DETAIL_ITEM",
           modalId: 54014,
+          getUrlParms: getUrlNameParams,
         },
       });
     }
