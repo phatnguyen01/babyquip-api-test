@@ -35,10 +35,7 @@ app.post("/api/deeplink/url-parser", (req, res) => {
           isFromAffiliate: true,
         },
       });
-    } else if (
-      url ===
-      "https://staging.babyquip.com/p/777/items/baby-jogger-city-mini-2-double-stroller"
-    ) {
+    } else if (url === "https://staging.babyquip.com/p/777/carseats") {
       res.status(200).json({
         success: true,
         screen_name: "hd.QPShoppingScreen",
@@ -46,8 +43,8 @@ app.post("/api/deeplink/url-parser", (req, res) => {
           user: {
             id: 777,
           },
-          modal: "DETAIL_ITEM",
-          modalId: 103451,
+          modal: "CATEGORY_ITEM",
+          modalId: 21,
         },
       });
     } else {
@@ -58,8 +55,8 @@ app.post("/api/deeplink/url-parser", (req, res) => {
           user: {
             id: 777,
           },
-          modal: "CATEGORY_ITEM",
-          modalId: 21,
+          modal: "DETAIL_ITEM",
+          modalId: 54014,
         },
       });
     }
