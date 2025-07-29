@@ -24,7 +24,12 @@ app.post("/api/deeplink/url-parser", (req, res) => {
   try {
     // Get data from request body
     const { url } = req.body;
-    if (url === "https://staging.babyquip.com/p/777") {
+    if (url === " https://staging.babyquip.com/") {
+      res.status(200).json({
+        success: true,
+        screen_name: "hd.HomeExplore",
+      });
+    } else if (url === "https://staging.babyquip.com/p/777") {
       res.status(200).json({
         success: true,
         screen_name: "hd.QPShoppingScreen",
