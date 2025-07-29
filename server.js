@@ -38,7 +38,7 @@ app.post("/api/deeplink/url-parser", (req, res) => {
         success: true,
         screen_name: "hd.HomeExplore",
         params: {
-          user: { id: 777 },
+          user: { id: 999 },
         },
       });
     }
@@ -55,8 +55,7 @@ app.post("/api/deeplink/url-parser", (req, res) => {
         params: {
           user: { id: parseInt(pathSegments[1]) },
           isFromAffiliate: true,
-          modal: undefined,
-          getUrlParms: undefined,
+          modal: "QP_SHOP",
         },
       });
     }
