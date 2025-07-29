@@ -28,6 +28,11 @@ app.post("/api/deeplink/url-parser", (req, res) => {
       res.status(200).json({
         success: true,
         screen_name: "hd.HomeExplore",
+        params: {
+          user: {
+            id: 777,
+          },
+        },
       });
     } else if (url === "https://staging.babyquip.com/p/777") {
       res.status(200).json({
